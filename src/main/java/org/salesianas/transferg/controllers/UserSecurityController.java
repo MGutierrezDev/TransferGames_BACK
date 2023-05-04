@@ -11,16 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/login")
-public class UserSecurityController {
-	
+@RequestMapping("/register")
+public class UserSecurityController {	
 	@Autowired
 	private IUserSecurityRepository repository;
 	
-	@GetMapping
-	public ResponseEntity<?> listAll() {
-        return ResponseEntity.ok(repository.findAll());
-    }
 	@PostMapping
 	public ResponseEntity<?> save(@RequestBody UserSecurity user){
 		return ResponseEntity.ok(repository.save(user));
