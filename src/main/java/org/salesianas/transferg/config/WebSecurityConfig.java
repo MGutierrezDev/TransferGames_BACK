@@ -27,30 +27,27 @@ public class WebSecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain( HttpSecurity http, AuthenticationManager authManager) throws Exception {
 		
-		JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter();
-		jwtAuthenticationFilter.setAuthenticationManager(authManager);
-		jwtAuthenticationFilter.setFilterProcessesUrl("/login");
-		
-		return http
-				.cors()
-				.and()
-				.csrf().disable()
-				.authorizeHttpRequests().antMatchers("/register").permitAll()
-				.anyRequest()
-				.authenticated()
-				.and()
-				.httpBasic()
-				.and()
-				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
-				.addFilter(jwtAuthenticationFilter)
-				.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-				.build();
+	    JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter();
+	    jwtAuthenticationFilter.setAuthenticationManager(authManager);
+	    jwtAuthenticationFilter.setFilterProcessesUrl("/login");
+
+	    return http
+	    		.csrf().disable().cors().and()
+	            .authorizeRequests()
+	            .antMatchers("/register").permitAll()
+	            .anyRequest().authenticated()
+	            .and()
+	            .httpBasic()
+	            .and()
+	            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+	            .and()
+	            .addFilter(jwtAuthenticationFilter)
+	            .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+	            .build();
 	}	
 	
 	@Bean
-	AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
+	AuthenticationManager authManager(HttpSecurity http) throws Exception {
 		return http.getSharedObject(AuthenticationManagerBuilder.class)
 				.userDetailsService(userDetailsService)
 				.passwordEncoder(passwordEncoder())
@@ -61,9 +58,5 @@ public class WebSecurityConfig {
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
-	}
-	public static void main(String[] args) {
-		System.out.println(new BCryptPasswordEncoder().encode("manuel"));
-		
 	}
 }

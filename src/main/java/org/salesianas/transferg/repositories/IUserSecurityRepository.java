@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IUserSecurityRepository extends JpaRepository<UserSecurity, Integer> {
+public interface IUserSecurityRepository extends JpaRepository<UserSecurity, Long> {
 	Optional<UserSecurity> findOneByEmail(String email);
 }
