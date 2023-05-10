@@ -53,8 +53,8 @@ public class UserDetailImpl  implements UserDetails {
 		return true;
 	}
 	
-	public String getNombre() {
-		return usuario.getNombre();
+	public String getName() {
+		return usuario.getName();
 	}
 
 }

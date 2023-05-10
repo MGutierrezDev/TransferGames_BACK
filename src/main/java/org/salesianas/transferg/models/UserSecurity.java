@@ -22,7 +22,8 @@ public class UserSecurity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String nombre;
+	private String name;
+	@Column(unique = true)
 	private String email;
 	private String password;
 
