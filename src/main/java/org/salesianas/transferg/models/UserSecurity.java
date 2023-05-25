@@ -30,4 +30,8 @@ public class UserSecurity {
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="user")
 	@JsonIgnoreProperties({"user"})
 	private List <MensajeForo> mensajes = new ArrayList<>();
+	
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="user")
+    @JsonIgnoreProperties({"user"})
+    private List <RespuestaForo> respuestas = new ArrayList<>();
 }

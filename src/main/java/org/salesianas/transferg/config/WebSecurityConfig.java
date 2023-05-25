@@ -35,6 +35,7 @@ public class WebSecurityConfig {
 	    		.csrf().disable().cors().and()
 	            .authorizeRequests()
 	            .antMatchers("/register").permitAll()
+	            .antMatchers("/login").permitAll()
 	            .anyRequest().authenticated()
 	            .and()
 	            .httpBasic()

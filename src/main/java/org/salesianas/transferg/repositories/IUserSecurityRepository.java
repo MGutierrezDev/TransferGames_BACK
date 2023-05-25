@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IUserSecurityRepository extends JpaRepository<UserSecurity, Long> {
 	Optional<UserSecurity> findOneByEmail(String email);
+	UserSecurity findByEmail(String email);
 }
