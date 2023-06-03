@@ -1,9 +1,13 @@
 package org.salesianas.transferg.controllers;
 
+import java.util.List;
 import java.util.Objects;
+
 import org.salesianas.transferg.exceptions.EmailInvalidException;
 import org.salesianas.transferg.exceptions.UserNotFoundException;
+import org.salesianas.transferg.models.ERole;
 import org.salesianas.transferg.models.UserSecurity;
+import org.salesianas.transferg.repositories.ERoleRepository;
 import org.salesianas.transferg.repositories.IUserSecurityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

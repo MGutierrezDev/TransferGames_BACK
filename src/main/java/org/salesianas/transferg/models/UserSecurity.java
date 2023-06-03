@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -26,6 +27,10 @@ public class UserSecurity {
 	@Column(unique = true)
 	private String email;
 	private String password;
+	
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("users")
+    private List<ERole> roles = new ArrayList<>();
 
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="user")
 	@JsonIgnoreProperties({"user"})
@@ -34,4 +39,8 @@ public class UserSecurity {
     @OneToMany(fetch=FetchType.LAZY, mappedBy="user")
     @JsonIgnoreProperties({"user"})
     private List <RespuestaForo> respuestas = new ArrayList<>();
+    
+    public boolean isAdmin() {
+        return roles.stream().anyMatch(role -> role.getName().equals("ADMIN"));
+    }
 }
