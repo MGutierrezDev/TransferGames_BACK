@@ -1,11 +1,15 @@
 package org.salesianas.transferg.security;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.salesianas.transferg.models.ERole;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -17,12 +21,13 @@ public class TokenUtils {
 	private final static String ACCESS_TOKEN_SECRET = "4qhq8LrEBfYcaRHxhdb9zURb2rf8e7Ud";
 	private final static Long ACCESS_TOKEN_VALIDITY_SECONDS = 2_592_00L;
 	
-	public static String createToken(String nombre, String email) {
+	public static String createToken(String nombre, String email, Collection<? extends GrantedAuthority> roles) {
 		long expirationTime = ACCESS_TOKEN_VALIDITY_SECONDS * 1000;
 		Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
 		
 		Map<String, Object> extra = new HashMap<>();
 		extra.put("nombre", nombre);
+		extra.put("roles", roles);
 		
 		return Jwts.builder()
 				.setSubject(email)

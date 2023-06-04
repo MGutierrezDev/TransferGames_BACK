@@ -1,10 +1,9 @@
 package org.salesianas.transferg.config;
 
 import org.salesianas.transferg.models.ERole;
-import org.salesianas.transferg.repositories.ERoleRepository;
+import org.salesianas.transferg.repositories.IRoleRepository;
 import org.salesianas.transferg.security.filter.JWTAuthenticationFilter;
 import org.salesianas.transferg.security.filter.JWTAuthorizationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,9 +23,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class WebSecurityConfig {
 	
-	private final ERoleRepository roleRepository;
 	private final UserDetailsService userDetailsService;
 	private final JWTAuthorizationFilter jwtAuthorizationFilter;
+	private final IRoleRepository roleRepository;
 
 	@Bean
 	SecurityFilterChain filterChain( HttpSecurity http, AuthenticationManager authManager) throws Exception {
@@ -40,6 +39,7 @@ public class WebSecurityConfig {
 	            .authorizeRequests()
 	            .antMatchers("/register").permitAll()
 	            .antMatchers("/login").permitAll()
+	            .antMatchers("/admin/**").hasRole("ADMIN")
 	            .anyRequest().authenticated()
 	            .and()
 	            .httpBasic()
@@ -64,10 +64,9 @@ public class WebSecurityConfig {
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
 
     @Bean
-    public void createRoles() {
+    void createRoles() {
         if (roleRepository.findByName("ADMIN") == null) {
             ERole adminRole = new ERole("ADMIN");
             roleRepository.save(adminRole);

@@ -1,10 +1,12 @@
 package org.salesianas.transferg.security.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 import org.salesianas.transferg.models.UserSecurity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.AllArgsConstructor;
@@ -16,8 +18,14 @@ public class UserDetailImpl  implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
+	    List<GrantedAuthority> authorities = new ArrayList<>();
+	    
+	    // Agregar el rol del usuario como una instancia de GrantedAuthority
+	    if (usuario.getRole() != null) {
+	        authorities.add(new SimpleGrantedAuthority(usuario.getRole().getName()));
+	    }
+	    
+	    return authorities;
 	}
 
 	@Override
@@ -56,5 +64,6 @@ public class UserDetailImpl  implements UserDetails {
 	public String getName() {
 		return usuario.getName();
 	}
+
 
 }
