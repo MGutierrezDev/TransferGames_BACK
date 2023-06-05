@@ -2,6 +2,7 @@ package org.salesianas.transferg.controllers;
 
 import java.time.LocalDateTime;
 import org.salesianas.transferg.exceptions.EmailInvalidException;
+import org.salesianas.transferg.exceptions.JuegoNotFoundException;
 import org.salesianas.transferg.exceptions.MensajeNotFoundException;
 import org.salesianas.transferg.exceptions.MensajeOnUserNotFoundException;
 import org.salesianas.transferg.exceptions.PasswordInvalidException;
@@ -68,5 +69,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
   public ResponseEntity<ErrorMessage> emailInvalidException(EmailInvalidException exception){
     ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.CONFLICT, exception.getMessage());
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  }
+  
+  //*****************EXCEPCIONES DE JUEGO*******************
+  @ExceptionHandler(JuegoNotFoundException.class)
+  public ResponseEntity<ErrorMessage> juegoNotFoundException(JuegoNotFoundException exception){
+    ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND, exception.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }
 }

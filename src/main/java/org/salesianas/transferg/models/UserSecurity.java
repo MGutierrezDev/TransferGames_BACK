@@ -49,9 +49,14 @@ public class UserSecurity {
     @OneToMany(fetch=FetchType.LAZY, mappedBy="user")
     @JsonIgnoreProperties({"user"})
     private List <RespuestaForo> respuestas = new ArrayList<>();
+    
+    @OneToMany(fetch = FetchType.EAGER, cascade= {CascadeType.ALL})
+    @JsonIgnoreProperties({"user"})
+    private List <Juego> listaJuegos = new ArrayList<>();
 
     public boolean isAdmin() {
         return role != null && role.getName().equals("ADMIN");
     }
+    
 	
 }
