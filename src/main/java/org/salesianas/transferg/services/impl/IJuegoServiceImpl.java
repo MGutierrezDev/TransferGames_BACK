@@ -28,7 +28,7 @@ public class IJuegoServiceImpl implements IJuegoService {
   @Override
   public List<Juego> findAllByIdUser(Long idUser) {
     UserSecurity user = userRepository.findById(idUser).orElseThrow(() -> new UserNotFoundException(idUser));
-    return user.getListaJuegos();
+    return user.getJuegos();
   }
 
   @Override

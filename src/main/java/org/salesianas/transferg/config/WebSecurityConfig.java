@@ -65,16 +65,5 @@ public class WebSecurityConfig {
 		return new BCryptPasswordEncoder();
 	}
 
-    @Bean
-    void createRoles() {
-        if (roleRepository.findByName("ADMIN") == null) {
-            ERole adminRole = new ERole("ADMIN");
-            roleRepository.save(adminRole);
-        }
-
-        if (roleRepository.findByName("USER") == null) {
-            ERole userRole = new ERole("USER");
-            roleRepository.save(userRole);
-        }
-    }
+    
 }

@@ -15,9 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -50,9 +48,10 @@ public class UserSecurity {
     @JsonIgnoreProperties({"user"})
     private List <RespuestaForo> respuestas = new ArrayList<>();
     
-    @OneToMany(fetch = FetchType.EAGER, cascade= {CascadeType.ALL})
-    @JsonIgnoreProperties({"user"})
-    private List <Juego> listaJuegos = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "user_juegos", joinColumns = @JoinColumn (name = "user_id"), inverseJoinColumns = @JoinColumn (name = "juego_id"))
+    @JsonIgnoreProperties("user")  
+    private List <Juego> juegos= new ArrayList<>();
 
     public boolean isAdmin() {
         return role != null && role.getName().equals("ADMIN");
