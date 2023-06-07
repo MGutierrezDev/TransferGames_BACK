@@ -15,50 +15,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users")
 public class RespuestaForoController {
 
   @Autowired
   private IRespuestaForoService service;
 
-  @GetMapping("/mensajes/respuestas")
+  @GetMapping("/users/mensajes/respuestas")
   public ResponseEntity<?> listAll() {
     return ResponseEntity.ok(service.findAll());
   }
 
-  @GetMapping("{idUser}/mensajes/respuestas")
+  @GetMapping("/users/{idUser}/mensajes/respuestas")
   public ResponseEntity<?> listAllByIdUser(@PathVariable Long idUser) {
     return ResponseEntity.ok(service.findAllByIdUser(idUser));
   }
 
-  @GetMapping("/mensajes/{idMensaje}/respuestas")
+  @GetMapping("/users/mensajes/{idMensaje}/respuestas")
   public ResponseEntity<?> listAllByIdMensaje(@PathVariable Long idMensaje) {
     return ResponseEntity.ok(service.findAllByIdMensaje(idMensaje));
   }
 
-  @GetMapping("/mensajes/respuestas/{idRespuesta}")
+  @GetMapping("/users/mensajes/respuestas/{idRespuesta}")
   public ResponseEntity<?> findById(@PathVariable Long idRespuesta) throws RespuestaNotFoundException {
     return ResponseEntity.ok(service.findById(idRespuesta));
   }
 
-  @PostMapping("/mensajes/respuestas")
+  @PostMapping("/users/mensajes/respuestas")
   public ResponseEntity<?> create(@RequestBody RespuestaForo respuesta) {
     return ResponseEntity.ok(service.create(respuesta));
   }
 
-  @PostMapping("{idUser}/mensajes/{idMensaje}/respuestas")
+  @PostMapping("/users{idUser}/mensajes/{idMensaje}/respuestas")
   public ResponseEntity<?> createByIdUserAndIdMensaje(@PathVariable Long idUser,
       @PathVariable Long idMensaje, @RequestBody RespuestaForo respuesta) {
     return ResponseEntity.ok(service.createByIdUserAndIdMensaje(idUser, idMensaje, respuesta));
   }
 
-  @PutMapping("/mensajes/respuestas/{idRespuesta}")
+  @PutMapping("/users/mensajes/respuestas/{idRespuesta}")
   public ResponseEntity<?> update(@PathVariable Long idRespuesta,
       @RequestBody RespuestaForo respuesta) {
     return ResponseEntity.ok(service.update(idRespuesta, respuesta));
   }
 
-  @DeleteMapping("mensajes/respuestas/{idRespuesta}")
+  @DeleteMapping("admin/usersmensajes/respuestas/{idRespuesta}")
   public String delete(@PathVariable Long idRespuesta) {
     service.deleteById(idRespuesta);
     return "Respuesta eliminada correctamente";

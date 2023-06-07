@@ -3,6 +3,7 @@ package org.salesianas.transferg.controllers;
 import java.time.LocalDateTime;
 
 import org.salesianas.transferg.exceptions.EmailInvalidException;
+import org.salesianas.transferg.exceptions.EmailNotFoundException;
 import org.salesianas.transferg.exceptions.JuegoNotFoundException;
 import org.salesianas.transferg.exceptions.LoginInvalidException;
 import org.salesianas.transferg.exceptions.MensajeNotFoundException;
@@ -75,10 +76,18 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
   } 
   
   //****************EXCEPCIONES DE EMAIL********************
+  //EMAIL YA EXISTE EN LA BBDD
   @ExceptionHandler(EmailInvalidException.class)
   public ResponseEntity<ErrorMessage> emailInvalidException(EmailInvalidException exception){
     ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.CONFLICT, exception.getMessage());
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  }
+  
+  //EMAIL NO EXISTE
+  @ExceptionHandler(EmailNotFoundException.class)
+  public ResponseEntity<ErrorMessage> emailInvalidException(EmailNotFoundException exception){
+    ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND, exception.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }
   
   //*****************EXCEPCIONES DE JUEGO*******************

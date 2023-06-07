@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.salesianas.transferg.exceptions.EmailInvalidException;
+import org.salesianas.transferg.exceptions.EmailNotFoundException;
 import org.salesianas.transferg.exceptions.PasswordInvalidException;
 import org.salesianas.transferg.models.ERole;
 import org.salesianas.transferg.models.LoginRequest;
@@ -34,8 +35,8 @@ public class AuthServiceImpl implements IAuthService {
 	
 	private void checkEmailInvalid(LoginRequest user) throws Exception {
 	     UserSecurity userEmail = userService.getUserByEmail(user.getEmail());
-	        if (userEmail != null && !Objects.equals(userService.getUserByEmail(user.getEmail()), userEmail.getId())) {
-	            throw new EmailInvalidException();
+	        if (userEmail == null) {
+	            throw new EmailNotFoundException(user.getEmail());
 	        }
 	}
 	private void checkPasswordInvalid(LoginRequest user) {

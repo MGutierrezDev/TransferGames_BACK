@@ -33,18 +33,6 @@ public class UserSecurityController {
 	
 	@Autowired IRoleRepository roleRepository;
 	
-	private void checkEmailInvalid(UserSecurity user) throws Exception {
-	     UserSecurity userEmail = userService.getUserByEmail(user.getEmail());
-	        if (userEmail != null && !Objects.equals(user.getId(), userEmail.getId())) {
-	            throw new EmailInvalidException();
-	        }
-	}
-	private void checkPasswordInvalid(UserSecurity user) {
-		if(user.getPassword().length()<6) {
-			throw new PasswordInvalidException();
-		}
-	}
-	
 	@Operation(summary = "Devuelve un user por id")
 	@GetMapping("user/{email}")
 	public ResponseEntity<?> getUserByEmail(@PathVariable String email) throws Exception{
@@ -71,6 +59,10 @@ public class UserSecurityController {
 
 		if (!user.getRespuestas().isEmpty()) {
 		    user.getRespuestas().clear();
+		}
+		
+		if (!user.getJuegos().isEmpty()) {
+			user.getJuegos().clear();
 		}
 		
 		userService.deleteUser(user);

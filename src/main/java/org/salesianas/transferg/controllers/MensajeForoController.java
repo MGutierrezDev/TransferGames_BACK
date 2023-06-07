@@ -17,44 +17,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users")
 public class MensajeForoController {
 
   @Autowired
   private IMensajeForoService service;
 
-  @GetMapping("/mensajes")
+  @GetMapping("/users/mensajes")
   public ResponseEntity<?> listAll() {
     return ResponseEntity.ok(service.findAll());
   }
 
-  @GetMapping("{idUser}/mensajes")
+  @GetMapping("/users/{idUser}/mensajes")
 	public ResponseEntity<?> listAllByIdUser(@PathVariable Long idUser) throws MensajeOnUserNotFoundException{
 	    return ResponseEntity.ok(service.findAllByIdUser(idUser));
 	}
 
-  @GetMapping("/mensajes/{id}")
+  @GetMapping("/users/mensajes/{id}")
   public ResponseEntity<?> findById(@PathVariable Long id) throws MensajeNotFoundException {
     return ResponseEntity.ok(service.findById(id));
   }
 
-  @PostMapping("/mensajes")
+  @PostMapping("/users/mensajes")
   public ResponseEntity<?> create(@RequestBody MensajeForo mensaje) {
     return ResponseEntity.ok(service.create(mensaje));
   }
 
-  @PostMapping("/{idUser}/mensajes")
+  @PostMapping("/users/{idUser}/mensajes")
   public ResponseEntity<?> createWithUser(@RequestBody MensajeForo mensaje,
       @PathVariable Long idUser) {
     return ResponseEntity.ok(service.createWithUser(mensaje, idUser));
   }
 
-  @PutMapping("/mensajes/{id}")
+  @PutMapping("/users/mensajes/{id}")
   public ResponseEntity<?> update(@PathVariable Long id, @RequestBody MensajeForo mensaje) {
     return ResponseEntity.ok(service.update(id, mensaje));
   }
 
-  @DeleteMapping("/mensajes/{id}")
+  @DeleteMapping("admin/users/mensajes/{id}")
   public String deleteById(@PathVariable Long id) {
     service.deleteById(id);
     return "Mensaje eliminado correctamente";
