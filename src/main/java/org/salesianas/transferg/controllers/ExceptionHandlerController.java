@@ -1,14 +1,17 @@
 package org.salesianas.transferg.controllers;
 
 import java.time.LocalDateTime;
+
 import org.salesianas.transferg.exceptions.EmailInvalidException;
 import org.salesianas.transferg.exceptions.JuegoNotFoundException;
+import org.salesianas.transferg.exceptions.LoginInvalidException;
 import org.salesianas.transferg.exceptions.MensajeNotFoundException;
 import org.salesianas.transferg.exceptions.MensajeOnUserNotFoundException;
 import org.salesianas.transferg.exceptions.PasswordInvalidException;
 import org.salesianas.transferg.exceptions.RespuestaNotFoundException;
 import org.salesianas.transferg.exceptions.RespuestaOnMensajeNotFoundException;
 import org.salesianas.transferg.exceptions.RespuestaOnUserNotFoundException;
+import org.salesianas.transferg.exceptions.UserEmailNotFoundException;
 import org.salesianas.transferg.exceptions.UserNotFoundException;
 import org.salesianas.transferg.exceptions.dto.ErrorMessage;
 import org.springframework.http.HttpStatus;
@@ -57,6 +60,13 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }
   
+  //USER EMAIL NO ENCONTRADO
+  @ExceptionHandler(UserEmailNotFoundException.class)
+  public ResponseEntity<ErrorMessage> userNotFoundException(UserEmailNotFoundException exception){
+    ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND, exception.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
+  
   //USER PASSWORD INVALID
   @ExceptionHandler(PasswordInvalidException.class)
   public ResponseEntity<ErrorMessage> passwordInvalidException(PasswordInvalidException exception){
@@ -76,5 +86,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
   public ResponseEntity<ErrorMessage> juegoNotFoundException(JuegoNotFoundException exception){
     ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND, exception.getMessage());
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
+  
+  //******************EXCEPCIONES DE LOGIN********************
+  @ExceptionHandler(LoginInvalidException.class)
+  public ResponseEntity<ErrorMessage> loginInvalidException(LoginInvalidException exception){
+    ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.BAD_REQUEST, exception.getMessage());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
   }
 }

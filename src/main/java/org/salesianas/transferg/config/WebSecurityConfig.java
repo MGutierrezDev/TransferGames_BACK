@@ -1,69 +1,53 @@
 package org.salesianas.transferg.config;
 
-import org.salesianas.transferg.models.ERole;
-import org.salesianas.transferg.repositories.IRoleRepository;
-import org.salesianas.transferg.security.filter.JWTAuthenticationFilter;
-import org.salesianas.transferg.security.filter.JWTAuthorizationFilter;
+import javax.servlet.http.HttpServletResponse;
+
+import org.modelmapper.ModelMapper;
+import org.salesianas.transferg.security.JWTFilter;
+import org.salesianas.transferg.security.MyUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import lombok.AllArgsConstructor;
-
-
 @Configuration
-@AllArgsConstructor
-public class WebSecurityConfig {
-	
-	private final UserDetailsService userDetailsService;
-	private final JWTAuthorizationFilter jwtAuthorizationFilter;
-	private final IRoleRepository roleRepository;
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Bean
-	SecurityFilterChain filterChain( HttpSecurity http, AuthenticationManager authManager) throws Exception {
-		
-	    JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter();
-	    jwtAuthenticationFilter.setAuthenticationManager(authManager);
-	    jwtAuthenticationFilter.setFilterProcessesUrl("/login");
+	@Autowired
+	private JWTFilter filter;
+	@Autowired
+	private MyUserDetailsService uds;
 
-	    return http
-	    		.csrf().disable().cors().and()
-	            .authorizeRequests()
-	            .antMatchers("/register").permitAll()
-	            .antMatchers("/login").permitAll()
-	            .antMatchers("/admin/**").hasRole("ADMIN")
-	            .anyRequest().authenticated()
-	            .and()
-	            .httpBasic()
-	            .and()
-	            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-	            .and()
-	            .addFilter(jwtAuthenticationFilter)
-	            .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-	            .build();
-	}	
-	
-	@Bean
-	AuthenticationManager authManager(HttpSecurity http) throws Exception {
-		return http.getSharedObject(AuthenticationManagerBuilder.class)
-				.userDetailsService(userDetailsService)
-				.passwordEncoder(passwordEncoder())
-				.and()
-				.build();
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable().httpBasic().disable().cors().and().authorizeHttpRequests()
+
+				.antMatchers("/login").permitAll()
+				.antMatchers("/register").permitAll()
+				.antMatchers("/admin/**").hasAnyRole("ADMIN")
+
+				.and().userDetailsService(uds).exceptionHandling()
+				.authenticationEntryPoint((request, response, authException) -> response
+						.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
+				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 	}
-	
+
 	@Bean
-	PasswordEncoder passwordEncoder() {
+	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
-    
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 }

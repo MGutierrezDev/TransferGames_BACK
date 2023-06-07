@@ -1,9 +1,11 @@
 package org.salesianas.transferg.services;
 
 import java.util.List;
-import org.salesianas.transferg.exceptions.RespuestaNotFoundException;
-import org.salesianas.transferg.models.RespuestaForo;
 
+import org.salesianas.transferg.models.RespuestaForo;
+import org.springframework.stereotype.Service;
+
+@Service
 public interface IRespuestaForoService {
   List<RespuestaForo> findAll();
   List<RespuestaForo> findAllByIdUser(Long idUser);

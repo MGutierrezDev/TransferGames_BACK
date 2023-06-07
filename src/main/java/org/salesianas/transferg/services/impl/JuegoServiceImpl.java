@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class IJuegoServiceImpl implements IJuegoService {
+public class JuegoServiceImpl implements IJuegoService {
 
   @Autowired
   private IJuegoRepository repository;

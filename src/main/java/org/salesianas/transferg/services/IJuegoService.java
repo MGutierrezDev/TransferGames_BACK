@@ -1,8 +1,11 @@
 package org.salesianas.transferg.services;
 
 import java.util.List;
-import org.salesianas.transferg.models.Juego;
 
+import org.salesianas.transferg.models.Juego;
+import org.springframework.stereotype.Service;
+
+@Service
 public interface IJuegoService {
   List<Juego> findAll();
   List<Juego> findAllByIdUser(Long idUser);

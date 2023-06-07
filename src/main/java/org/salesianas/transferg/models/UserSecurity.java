@@ -15,7 +15,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -29,16 +31,21 @@ public class UserSecurity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Pattern(regexp = "^.[^\\d]{2,40}$")
 	private String name;
+	
 	@Column(unique = true)
+	@NotBlank(message = "Email is mandatory")
+	@Email(message = "The email is incorrect")
 	private String email;
 	
 	@NotBlank
 	@Size(min = 6)
 	private String password;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade= {CascadeType.ALL})
-	ERole role = new ERole();
+	@ManyToOne()
+	@JoinColumn(name = "role_id")
+	private ERole roleId;
 
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="user")
 	@JsonIgnoreProperties({"user"})
@@ -54,7 +61,7 @@ public class UserSecurity {
     private List <Juego> juegos= new ArrayList<>();
 
     public boolean isAdmin() {
-        return role != null && role.getName().equals("ADMIN");
+        return roleId != null && roleId.getName().equals("ADMIN");
     }
     
 	
