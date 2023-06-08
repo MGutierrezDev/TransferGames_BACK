@@ -1,14 +1,22 @@
 package org.salesianas.transferg.controllers;
 
+import java.io.IOException;
+
 import org.salesianas.transferg.models.Juego;
+import org.salesianas.transferg.models.UserSecurity;
 import org.salesianas.transferg.services.IJuegoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 public class JuegoController {
@@ -34,5 +42,20 @@ public class JuegoController {
   @PostMapping("admin/juego")
   public ResponseEntity<?> create(@RequestBody Juego juego){
     return ResponseEntity.ok(service.create(juego));
+  }
+  
+  @PutMapping("admin/juego/id")
+  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UserSecurity user){
+	  return ResponseEntity.ok(null);
+  }
+  @Operation(summary = "Recibe una imagen y la asocia al juego que se le indica en el id")
+  @PutMapping("admin/juego/{id}/image")
+  public void uploadImage(@PathVariable Long id, @RequestParam("juegoImg") MultipartFile img) throws Exception {
+	  Juego juego = service.findById(id);
+	  try {
+		  service.saveImageJuego(img, juego);
+	  } catch (IOException e) {
+		  e.printStackTrace();
+	  }
   }
 }

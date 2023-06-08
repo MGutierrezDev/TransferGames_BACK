@@ -1,6 +1,8 @@
 package org.salesianas.transferg.services.impl;
 
+import java.io.IOException;
 import java.util.List;
+
 import org.salesianas.transferg.exceptions.JuegoNotFoundException;
 import org.salesianas.transferg.exceptions.UserNotFoundException;
 import org.salesianas.transferg.models.Juego;
@@ -9,8 +11,8 @@ import org.salesianas.transferg.repositories.IJuegoRepository;
 import org.salesianas.transferg.repositories.IUserSecurityRepository;
 import org.salesianas.transferg.services.IJuegoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class JuegoServiceImpl implements IJuegoService {
@@ -43,16 +45,34 @@ public class JuegoServiceImpl implements IJuegoService {
 
 
   @Override
-  public Juego update(Long id, Juego juego) {
-    // TODO Auto-generated method stub
-    return null;
+  public Juego update(Long id, Juego newJuego) {
+    Juego juego = repository.findById(id).orElseThrow(()-> new JuegoNotFoundException(id));
+    juego.setNombre(newJuego.getNombre());
+    juego.setDescripcion(newJuego.getDescripcion());
+    juego.setDireccion(newJuego.getDireccion());
+    juego.setImage(newJuego.getImage());
+    juego.setUsuarios(newJuego.getUsuarios());
+    return repository.save(juego);
   }
 
   @Override
   public void deleteById(Long id) {
-    // TODO Auto-generated method stub
-    
+    Juego juego = repository.findById(id).orElseThrow(()->new JuegoNotFoundException(id));
+    if(!juego.getUsuarios().isEmpty()) {
+    	juego.getUsuarios().clear();
+    }
+    repository.delete(juego);
   }
+
+@Override
+public Juego saveImageJuego(MultipartFile img, Juego juego) throws IOException {
+	byte[] bytes = null;
+	if (!img.isEmpty()) {
+		bytes = img.getBytes();
+	}
+	juego.setImage(bytes);
+	return repository.save(juego);
+}
 
 
 }

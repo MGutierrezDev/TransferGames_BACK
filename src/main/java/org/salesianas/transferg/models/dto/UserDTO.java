@@ -23,6 +23,8 @@ public class UserDTO {
 	
 	private ERole role;
 	
+	private byte[] imagen;
+	
 	public UserDTO(UserSecurity user) {
 		this.id = user.getId();
 		this.name = user.getName();

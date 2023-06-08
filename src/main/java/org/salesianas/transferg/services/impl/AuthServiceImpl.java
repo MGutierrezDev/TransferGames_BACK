@@ -47,7 +47,9 @@ public class AuthServiceImpl implements IAuthService {
 
 	@Override
 	public Map<String, Object> registerUser(UserSecurity user) throws Exception {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		if(user.getPassword()!=null) {
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+		}
 		ERole rolAdmin = roleRepository.findByName("ADMIN");
 		ERole rolUser = roleRepository.findByName("USER");
 		if("ADMIN".equals(user.getRoleId().getName())) {

@@ -1,12 +1,12 @@
 package org.salesianas.transferg.services.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import org.modelmapper.ModelMapper;
 import org.salesianas.transferg.exceptions.EmailInvalidException;
-import org.salesianas.transferg.exceptions.UserEmailNotFoundException;
 import org.salesianas.transferg.exceptions.UserNotFoundException;
 import org.salesianas.transferg.models.UserSecurity;
 import org.salesianas.transferg.models.dto.UserDTO;
@@ -14,6 +14,7 @@ import org.salesianas.transferg.repositories.IUserSecurityRepository;
 import org.salesianas.transferg.services.IUserSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserSecurityServiceImpl implements IUserSecurityService {
@@ -24,12 +25,14 @@ public class UserSecurityServiceImpl implements IUserSecurityService {
 	@Autowired
 	private ModelMapper modelMapper;
 	
-	private void checkValidEmail(UserSecurity user) {
-		UserSecurity userEmail = userRepository.findByEmail(user.getEmail());
-		if (userEmail != null && !Objects.equals(user.getId(), userEmail.getId())) {
-			throw new EmailInvalidException();
-		}
+	public UserSecurity convertToEntity(UserDTO userDto) {
+		return modelMapper.map(userDto, UserSecurity.class);
 	}
+
+	public UserDTO convertToDto(UserSecurity user) {
+		return modelMapper.map(user, UserDTO.class);
+	}
+
 	public List<UserDTO> usersListDto(List<UserSecurity> users){
 		List<UserDTO> usersResponse = new ArrayList<>();
 		for (UserSecurity user : users) {
@@ -81,6 +84,25 @@ public class UserSecurityServiceImpl implements IUserSecurityService {
 	@Override
 	public UserSecurity getUserByEmail(String email) {
 		return userRepository.findByEmail(email);
+	}
+	@Override
+	public UserDTO saveImageUser(MultipartFile img, UserSecurity user) throws IOException {
+		byte[] bytes = null;
+		if (!img.isEmpty()) {
+			bytes = img.getBytes();
+		}
+		user.setImage(bytes);
+		userRepository.save(user);
+		return convertToDto(user);
+	}
+
+	@Override
+	public String checkValidEmail(UserSecurity user) {
+		UserSecurity userEmail = userRepository.findByEmail(user.getEmail());
+		if (userEmail != null && !Objects.equals(user.getId(), userEmail.getId())) {
+			throw new EmailInvalidException();
+		}
+		return userEmail.getEmail();
 	}
 	
 }
