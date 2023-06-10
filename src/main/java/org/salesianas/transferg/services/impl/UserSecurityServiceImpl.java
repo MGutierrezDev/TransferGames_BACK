@@ -25,6 +25,10 @@ public class UserSecurityServiceImpl implements IUserSecurityService {
 	@Autowired
 	private ModelMapper modelMapper;
 	
+    public boolean isEmailAlreadyExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+	
 	public UserSecurity convertToEntity(UserDTO userDto) {
 		return modelMapper.map(userDto, UserSecurity.class);
 	}
@@ -45,6 +49,9 @@ public class UserSecurityServiceImpl implements IUserSecurityService {
 
 	@Override
 	public UserSecurity saveUser(UserSecurity user) throws Exception {
+		if(userRepository.existsByEmail(user.getEmail())) {
+			throw new EmailInvalidException();
+		}
 		return userRepository.save(user);
 	}
 

@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IUserSecurityRepository extends JpaRepository<UserSecurity, Long> {
 	public UserSecurity findByEmail(String email);
+	boolean existsByEmail(String email);
 }

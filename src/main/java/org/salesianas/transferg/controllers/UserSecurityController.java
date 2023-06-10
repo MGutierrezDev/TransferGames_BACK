@@ -26,7 +26,7 @@ public class UserSecurityController {
 	
 	@Autowired IRoleRepository roleRepository;
 	
-	@Operation(summary = "Devuelve un user por id")
+	@Operation(summary = "Devuelve un user por email")
 	@GetMapping("user/{email}")
 	public ResponseEntity<?> getUserByEmail(@PathVariable String email) throws Exception{
 		return ResponseEntity.ok(userService.getUserByEmail(email));
