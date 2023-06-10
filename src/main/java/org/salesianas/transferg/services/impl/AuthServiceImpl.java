@@ -2,10 +2,9 @@ package org.salesianas.transferg.services.impl;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 
-import org.salesianas.transferg.exceptions.EmailInvalidException;
-import org.salesianas.transferg.exceptions.EmailNotFoundException;
+import org.salesianas.transferg.exceptions.BlankNameException;
+import org.salesianas.transferg.exceptions.EmailFormatoInvalidException;
 import org.salesianas.transferg.exceptions.PasswordInvalidException;
 import org.salesianas.transferg.models.ERole;
 import org.salesianas.transferg.models.LoginRequest;
@@ -33,23 +32,17 @@ public class AuthServiceImpl implements IAuthService {
 	@Autowired
 	private JWTUtil jwtUtil;
 	
-	private void checkEmailInvalid(LoginRequest user) throws Exception {
-	     UserSecurity userEmail = userService.getUserByEmail(user.getEmail());
-	        if (userEmail == null) {
-	            throw new EmailNotFoundException(user.getEmail());
-	        }
-	}
-	private void checkPasswordInvalid(LoginRequest user) {
+	@Override
+	public Map<String, Object> registerUser(UserSecurity user) throws Exception {
 		if(user.getPassword().length()<6) {
 			throw new PasswordInvalidException();
 		}
-	}
-
-	@Override
-	public Map<String, Object> registerUser(UserSecurity user) throws Exception {
-		if(user.getPassword()!=null) {
-			user.setPassword(passwordEncoder.encode(user.getPassword()));
-		}
+	    if (!user.getName().matches("^.[^\\d]{2,40}$")) {
+	        throw new BlankNameException();
+	    }
+	    if (!user.getEmail().matches("^.[^\\s@]+@([^\\s@.,]+\\.)+[a-zA-Z]{2,}$")) {
+	        throw new EmailFormatoInvalidException();
+	    }
 		ERole rolAdmin = roleRepository.findByName("ADMIN");
 		ERole rolUser = roleRepository.findByName("USER");
 		if("ADMIN".equals(user.getRoleId().getName())) {
@@ -63,9 +56,7 @@ public class AuthServiceImpl implements IAuthService {
 	}
 
 	@Override
-	public Map<String, Object> loginUser(LoginRequest userLogin) throws Exception {
-		checkEmailInvalid(userLogin);
-		checkPasswordInvalid(userLogin);
+	public Map<String, Object> loginUser(LoginRequest userLogin) {
 		UserSecurity user = userService.getUserByEmail(userLogin.getEmail());
 		String rol = user.getRoleId().getName();
 		String token = jwtUtil.generateToken(rol, user.getId(), user.getEmail());

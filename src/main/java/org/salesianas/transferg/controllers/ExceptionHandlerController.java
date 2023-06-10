@@ -2,6 +2,8 @@ package org.salesianas.transferg.controllers;
 
 import java.time.LocalDateTime;
 
+import org.salesianas.transferg.exceptions.BlankNameException;
+import org.salesianas.transferg.exceptions.EmailFormatoInvalidException;
 import org.salesianas.transferg.exceptions.EmailInvalidException;
 import org.salesianas.transferg.exceptions.EmailNotFoundException;
 import org.salesianas.transferg.exceptions.JuegoNotFoundException;
@@ -75,6 +77,13 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   } 
   
+  //USER NAME NO PUEDE ESTAR VACIO
+  @ExceptionHandler(BlankNameException.class)
+  public ResponseEntity<ErrorMessage> blankNameException(BlankNameException exception){
+    ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.CONFLICT, exception.getMessage());
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  } 
+  
   //****************EXCEPCIONES DE EMAIL********************
   //EMAIL YA EXISTE EN LA BBDD
   @ExceptionHandler(EmailInvalidException.class)
@@ -85,7 +94,14 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
   
   //EMAIL NO EXISTE
   @ExceptionHandler(EmailNotFoundException.class)
-  public ResponseEntity<ErrorMessage> emailInvalidException(EmailNotFoundException exception){
+  public ResponseEntity<ErrorMessage> emailNotFoundException(EmailNotFoundException exception){
+    ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND, exception.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
+  
+  //EMAIL INCORRECTO
+  @ExceptionHandler(EmailFormatoInvalidException.class)
+  public ResponseEntity<ErrorMessage> emailFormatoInvalidException(EmailFormatoInvalidException exception){
     ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND, exception.getMessage());
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }

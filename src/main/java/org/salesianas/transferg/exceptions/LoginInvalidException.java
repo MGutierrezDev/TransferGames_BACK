@@ -1,6 +1,6 @@
 package org.salesianas.transferg.exceptions;
 
-public class LoginInvalidException extends RuntimeException {
+public class LoginInvalidException extends Exception {
 
 	/**
 	 * 

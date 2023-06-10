@@ -37,15 +37,15 @@ public class AuthController {
 	
 	@Operation(summary = "Login del usuario y devuelve token")
 	@PostMapping("login")
-	public Map<String, Object> loginUser(@RequestBody LoginRequest userLogin) throws Exception{
-		try {
-			UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(userLogin.getEmail(), userLogin.getPassword());
-			Authentication authentication = authManager.authenticate(authInputToken);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-			return authService.loginUser(userLogin);
-		}catch(AuthenticationException authExc) {
-			throw new LoginInvalidException();
-		}
+	public Map<String, Object> loginUser(@RequestBody LoginRequest userLogin) throws LoginInvalidException{
+	    try {
+	        UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(userLogin.getEmail(), userLogin.getPassword());
+	        Authentication authentication = authManager.authenticate(authInputToken);
+	        SecurityContextHolder.getContext().setAuthentication(authentication);
+	        return authService.loginUser(userLogin);
+	    } catch (Exception e) {
+	        throw new LoginInvalidException();
+	    }
 	}
 	
 	@Operation(summary="Devuelve informacion del usuario")
