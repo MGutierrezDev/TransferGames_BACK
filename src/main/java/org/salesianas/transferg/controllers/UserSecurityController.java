@@ -32,6 +32,12 @@ public class UserSecurityController {
 		return ResponseEntity.ok(userService.getUserByEmail(email));
 	}
 	
+	@Operation(summary = "Devuelve un user por id")
+	@GetMapping("admin/user/{id}")
+	public ResponseEntity<?> getUserByEId(@PathVariable Long id) throws Exception{
+		return ResponseEntity.ok(userService.getUserById(id));
+	}
+	
 	@Operation(summary = "Devuelve todos los usuarios")
 	@GetMapping("admin/user")
 	public ResponseEntity<?> getUser() throws Exception{
