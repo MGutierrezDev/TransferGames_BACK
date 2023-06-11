@@ -3,10 +3,10 @@ package org.salesianas.transferg.controllers;
 import java.io.IOException;
 
 import org.salesianas.transferg.models.Juego;
-import org.salesianas.transferg.models.UserSecurity;
 import org.salesianas.transferg.services.IJuegoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,9 +44,10 @@ public class JuegoController {
     return ResponseEntity.ok(service.create(juego));
   }
   
-  @PutMapping("admin/juego/id")
-  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UserSecurity user){
-	  return ResponseEntity.ok(null);
+  @Operation(summary="Recibe un juego y la id del juego a actualizar y lo actualiza")
+  @PutMapping("admin/juego/{id}")
+  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Juego juego){
+	  return ResponseEntity.ok(service.update(id, juego));
   }
   @Operation(summary = "Recibe una imagen y la asocia al juego que se le indica en el id")
   @PutMapping("admin/juego/{id}/image")
@@ -58,4 +59,10 @@ public class JuegoController {
 		  e.printStackTrace();
 	  }
   }
+  @Operation(summary="Recibe el id de un juego y lo elimina")
+  @DeleteMapping("admin/juego/{id}")
+  public void delete(@PathVariable Long id){
+	  service.deleteById(id);
+  }
+  
 }

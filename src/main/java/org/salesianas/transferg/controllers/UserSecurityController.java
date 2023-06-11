@@ -52,7 +52,7 @@ public class UserSecurityController {
 	
 	@Operation(summary = "Elimina un user mediante su id")
 	@DeleteMapping("/admin/user/{id}")
-	public String delete(@PathVariable Long id) throws Exception{
+	public void delete(@PathVariable Long id) throws Exception{
 		UserSecurity user = userService.getUserById(id);
 		if (!user.getMensajes().isEmpty()) {
 		    user.getMensajes().clear();
@@ -67,7 +67,6 @@ public class UserSecurityController {
 		}
 		
 		userService.deleteUser(user);
-		return "Usuario eliminado con exito";
 	}
 	@Operation(summary = "Recibe una imagen y la asocia al usuario que se le indica en el id")
 	@PutMapping("user/{id}/image")
