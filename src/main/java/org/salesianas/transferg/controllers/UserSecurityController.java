@@ -47,23 +47,7 @@ public class UserSecurityController {
 	@Operation(summary = "Actualiza un user mediante su id")
 	@PutMapping("/user/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UserSecurity newUser) throws Exception{
-	  String encodedPassword = new BCryptPasswordEncoder().encode(newUser.getPassword());
-	  UserSecurity user = userService.getUserById(id);
-	  user.setName(newUser.getName());
-	  if(userService.checkValidEmail(newUser)!=null) {
-		  user.setEmail(newUser.getEmail());
-	  }
-	  user.setEmail(newUser.getEmail());
-	  user.setPassword(encodedPassword);
-	  if(newUser.getPassword()!=null) {
-		  user.setPassword(encodedPassword);
-	  }
-	  user.setImage(newUser.getImage());
-	  user.setRoleId(newUser.getRoleId());
-	  user.setMensajes(newUser.getMensajes());
-	  user.setRespuestas(newUser.getRespuestas());
-	  user.setJuegos(newUser.getJuegos());
-	  return ResponseEntity.ok(userService.saveUser(user));
+	  return ResponseEntity.ok(userService.updateUser(id, newUser));
 	}
 	
 	@Operation(summary = "Elimina un user mediante su id")

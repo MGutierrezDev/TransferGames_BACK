@@ -13,6 +13,8 @@ import org.salesianas.transferg.models.dto.UserDTO;
 import org.salesianas.transferg.repositories.IUserSecurityRepository;
 import org.salesianas.transferg.services.IUserSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,8 +58,21 @@ public class UserSecurityServiceImpl implements IUserSecurityService {
 	}
 
 	@Override
-	public UserSecurity updateUser(Long idUser, UserSecurity user) throws Exception {
-		return null;
+	public UserSecurity updateUser(Long idUser, UserSecurity newUser) throws Exception {
+		  String encodedPassword = new BCryptPasswordEncoder().encode(newUser.getPassword());
+		  UserSecurity user = getUserById(idUser);
+		  user.setName(newUser.getName());
+		  user.setEmail(newUser.getEmail());
+		  user.setPassword(encodedPassword);
+		  if(newUser.getPassword()!=null) {
+			  user.setPassword(encodedPassword);
+		  }
+		  user.setImage(newUser.getImage());
+		  user.setRoleId(newUser.getRoleId());
+		  user.setMensajes(newUser.getMensajes());
+		  user.setRespuestas(newUser.getRespuestas());
+		  user.setJuegos(newUser.getJuegos());
+		  return userRepository.save(user);
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public interface IUserSecurityService {
 	public UserSecurity saveUser(UserSecurity user)throws Exception;
-	public UserSecurity updateUser(Long idUser, UserSecurity user) throws Exception;
+	public UserSecurity updateUser(Long idUser, UserSecurity newUuser) throws Exception;
 	public void deleteUser(UserSecurity user) throws Exception;
 	public void deleteById(Long id) throws Exception;
 	public UserSecurity getUserById(Long id) throws Exception;
