@@ -22,6 +22,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -33,7 +34,7 @@ public class UserSecurity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Pattern(regexp = "^.[^\\d]{2,40}$")
+	@Pattern(regexp = "^[a-zA-Z0-9]{2,}$")
 	private String name;
 	
 	@Column(unique = true)
@@ -66,6 +67,14 @@ public class UserSecurity {
     @JoinTable(name = "user_juegos", joinColumns = @JoinColumn (name = "user_id"), inverseJoinColumns = @JoinColumn (name = "juego_id"))
     @JsonIgnoreProperties("user")  
     private List <Juego> juegos= new ArrayList<>();
+    
+	@ManyToOne
+	@JsonIgnore
+	private TransferJumpPuntuacion transferPuntuacion;
+	
+	@ManyToOne
+	@JsonIgnore
+	private TransferJumpPuntuacion ranaManPuntuacion;
 
     public boolean isAdmin() {
         return roleId != null && roleId.getName().equals("ADMIN");

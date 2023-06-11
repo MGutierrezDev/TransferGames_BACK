@@ -11,6 +11,7 @@ import org.salesianas.transferg.exceptions.LoginInvalidException;
 import org.salesianas.transferg.exceptions.MensajeNotFoundException;
 import org.salesianas.transferg.exceptions.MensajeOnUserNotFoundException;
 import org.salesianas.transferg.exceptions.PasswordInvalidException;
+import org.salesianas.transferg.exceptions.PuntuacionNotFoundException;
 import org.salesianas.transferg.exceptions.RespuestaNotFoundException;
 import org.salesianas.transferg.exceptions.RespuestaOnMensajeNotFoundException;
 import org.salesianas.transferg.exceptions.RespuestaOnUserNotFoundException;
@@ -118,5 +119,13 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
   public ResponseEntity<ErrorMessage> loginInvalidException(LoginInvalidException exception){
     ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.BAD_REQUEST, exception.getMessage());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  }
+  
+  //**********************EXCEPCIONES DE PUNTUACION****************
+  //PUNTUACION NO ENCONTRADA
+  @ExceptionHandler(PuntuacionNotFoundException.class)
+  public ResponseEntity<ErrorMessage> puntuacionNotFoundException(PuntuacionNotFoundException exception){
+    ErrorMessage error = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND, exception.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }
 }

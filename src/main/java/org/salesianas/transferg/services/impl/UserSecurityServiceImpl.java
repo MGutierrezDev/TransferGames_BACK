@@ -8,8 +8,10 @@ import java.util.Objects;
 import org.modelmapper.ModelMapper;
 import org.salesianas.transferg.exceptions.EmailInvalidException;
 import org.salesianas.transferg.exceptions.UserNotFoundException;
+import org.salesianas.transferg.models.ERole;
 import org.salesianas.transferg.models.UserSecurity;
 import org.salesianas.transferg.models.dto.UserDTO;
+import org.salesianas.transferg.repositories.IRoleRepository;
 import org.salesianas.transferg.repositories.IUserSecurityRepository;
 import org.salesianas.transferg.services.IUserSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class UserSecurityServiceImpl implements IUserSecurityService {
 	
 	@Autowired
 	private IUserSecurityRepository userRepository;
+	
+	@Autowired
+	private IRoleRepository roleRepository;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -61,14 +66,20 @@ public class UserSecurityServiceImpl implements IUserSecurityService {
 	public UserSecurity updateUser(Long idUser, UserSecurity newUser) throws Exception {
 		  String encodedPassword = new BCryptPasswordEncoder().encode(newUser.getPassword());
 		  UserSecurity user = getUserById(idUser);
+		  ERole rolAdmin = roleRepository.findById((long) 1).get();
+		  ERole rolUser = roleRepository.findById((long) 2).get();
 		  user.setName(newUser.getName());
 		  user.setEmail(newUser.getEmail());
 		  user.setPassword(encodedPassword);
 		  if(newUser.getPassword()!=null) {
 			  user.setPassword(encodedPassword);
 		  }
+		  if(newUser.getRoleId()!= null && newUser.getRoleId().getName().equals("ADMIN")) {
+			  user.setRoleId(rolAdmin);
+		  } else{
+			  user.setRoleId(rolUser);
+		  }
 		  user.setImage(newUser.getImage());
-		  user.setRoleId(newUser.getRoleId());
 		  user.setMensajes(newUser.getMensajes());
 		  user.setRespuestas(newUser.getRespuestas());
 		  user.setJuegos(newUser.getJuegos());
