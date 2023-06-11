@@ -31,6 +31,12 @@ public class UserSecurityController {
 	public ResponseEntity<?> getUserByEmail(@PathVariable String email) throws Exception{
 		return ResponseEntity.ok(userService.getUserByEmail(email));
 	}
+	
+	@Operation(summary = "Devuelve todos los usuarios")
+	@GetMapping("admin/user")
+	public ResponseEntity<?> getUser() throws Exception{
+		return ResponseEntity.ok(userService.getAllUsers());
+	}
 
 	@Operation(summary = "Actualiza un user mediante su id")
 	@PutMapping("/user/{id}")
@@ -54,7 +60,7 @@ public class UserSecurityController {
 	  return ResponseEntity.ok(userService.saveUser(user));
 	}
 	
-	@Operation(summary = "Elimina un user mdeiante su id")
+	@Operation(summary = "Elimina un user mediante su id")
 	@DeleteMapping("/admin/user/{id}")
 	public String delete(@PathVariable Long id) throws Exception{
 		UserSecurity user = userService.getUserById(id);

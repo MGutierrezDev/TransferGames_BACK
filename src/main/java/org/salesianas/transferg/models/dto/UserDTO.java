@@ -23,12 +23,13 @@ public class UserDTO {
 	
 	private ERole role;
 	
-	private byte[] imagen;
+	private byte[] image;
 	
 	public UserDTO(UserSecurity user) {
 		this.id = user.getId();
 		this.name = user.getName();
 		this.email = user.getEmail();
+		this.image = user.getImage();
 		this.role = user.getRoleId();
 	}
 }
