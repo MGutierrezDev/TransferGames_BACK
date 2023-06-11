@@ -45,7 +45,7 @@ public class RespuestaForoController {
     return ResponseEntity.ok(service.create(respuesta));
   }
 
-  @PostMapping("/users{idUser}/mensajes/{idMensaje}/respuestas")
+  @PostMapping("/users/{idUser}/mensajes/{idMensaje}/respuestas")
   public ResponseEntity<?> createByIdUserAndIdMensaje(@PathVariable Long idUser,
       @PathVariable Long idMensaje, @RequestBody RespuestaForo respuesta) {
     return ResponseEntity.ok(service.createByIdUserAndIdMensaje(idUser, idMensaje, respuesta));
