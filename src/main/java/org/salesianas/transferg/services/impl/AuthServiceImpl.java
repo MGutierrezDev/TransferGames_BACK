@@ -37,9 +37,9 @@ public class AuthServiceImpl implements IAuthService {
 		if(user.getPassword().length()<6) {
 			throw new PasswordInvalidException();
 		}
-	    if (!user.getName().matches("^.[^\\d]{2,40}$")) {
-	        throw new BlankNameException();
-	    }
+		if (user.getName().length() < 2) {
+		    throw new BlankNameException();
+		}
 	    if (!user.getEmail().matches("^.[^\\s@]+@([^\\s@.,]+\\.)+[a-zA-Z]{2,}$")) {
 	        throw new EmailFormatoInvalidException();
 	    }
@@ -51,6 +51,7 @@ public class AuthServiceImpl implements IAuthService {
 		else {
 			user.setRoleId(rolUser);
 		}
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		UserSecurity userCreado = userService.saveUser(user);
 		return Collections.singletonMap("jwt_token", jwtUtil.generateToken(userCreado.getRoleId().getName(), userCreado.getId(), userCreado.getEmail()));
 	}
